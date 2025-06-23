@@ -16,6 +16,15 @@ import javax.swing.*;
 
 import java.util.HashMap;
 
+import comportamental.GetTotalButton;
+import comportamental.CreateOrderButton;
+import comportamental.ModifyOrderButton;
+import comportamental.RemoveOrderButton;
+import comportamental.SaveOrderButton;
+import comportamental.ExitButton;
+import comportamental.OrderTypeComboBox;
+import comportamental.Command;
+
 /**
  *
  * @author Fabio - Diego
@@ -35,29 +44,29 @@ public class OrderManager extends JFrame {
     public static final String REMOVE_ORDER = "Remove Order";
     public static final String EXIT = "Exit";
 
-    private JComboBox cmbOrderType;
+    private OrderTypeComboBox cmbOrderType;
     private JPanel pSearchCriteria;
 
-    private JButton getTotalButton, createOrderButton;
-    private JButton modOrderButton, saveOrderButton, exitButton, removeButton;
+    private GetTotalButton getTotalButton;
+    private CreateOrderButton createOrderButton;
+    private ModifyOrderButton modOrderButton;
+    private SaveOrderButton saveOrderButton;
+    private ExitButton exitButton;
+    private RemoveOrderButton removeButton;
 
     private JLabel lblOrderType;
     private JLabel lblParcial, lblParcialValue;
     private JLabel lblTotal, lblTotalValue;
 
     private OrderVisitor objVisitor;
+    private OrderComposite objOrderComp = new OrderComposite();
 
     public OrderManager() {
         super("Visitor Pattern Puntual Exercise");
 
         objVisitor = new OrderVisitor();
 
-        cmbOrderType = new JComboBox();
-        cmbOrderType.addItem(OrderManager.NULL);
-        cmbOrderType.addItem(OrderManager.CA_ORDER);
-        cmbOrderType.addItem(OrderManager.NON_CA_ORDER);
-        cmbOrderType.addItem(OrderManager.OVERSEAS_ORDER);
-        cmbOrderType.addItem(OrderManager.BZ_ORDER);
+        cmbOrderType = new OrderTypeComboBox(this);
 
         pSearchCriteria = new JPanel();
 
@@ -69,28 +78,14 @@ public class OrderManager extends JFrame {
         lblTotal = new JLabel("Result Total:");
         lblTotalValue = new JLabel("Click GetTotal Button");
 
-        // Create the open button
-        getTotalButton = new JButton(OrderManager.GET_TOTAL);
-        getTotalButton.setMnemonic(KeyEvent.VK_G);
-        getTotalButton.setEnabled(false);
+        getTotalButton = new GetTotalButton(this, objOrderComp);
+        createOrderButton = new CreateOrderButton(this, objOrderComp);
+        modOrderButton = new ModifyOrderButton(this, objOrderComp);
+        removeButton = new RemoveOrderButton(this, objOrderComp);
+        saveOrderButton = new SaveOrderButton(this, objOrderComp);
+        exitButton = new ExitButton();
 
-        createOrderButton = new JButton(OrderManager.CREATE_ORDER);
-        createOrderButton.setMnemonic(KeyEvent.VK_C);// getTotal?
-        createOrderButton.setEnabled(false);
-
-        modOrderButton = new JButton(OrderManager.MODIFY_ORDER);
-        modOrderButton.setEnabled(false);
-
-        removeButton = new JButton(OrderManager.REMOVE_ORDER);
-        removeButton.setEnabled(false);
-
-        saveOrderButton = new JButton(OrderManager.SAVE_ORDER);
-        saveOrderButton.setEnabled(false);
-
-        exitButton = new JButton(OrderManager.EXIT);
-        exitButton.setMnemonic(KeyEvent.VK_X);
-
-        ButtonHandler objButtonHandler = new ButtonHandler(this);
+        ButtonHandler objButtonHandler = new ButtonHandler();
 
         getTotalButton.addActionListener(objButtonHandler);
         createOrderButton.addActionListener(objButtonHandler);
@@ -234,7 +229,7 @@ public class OrderManager extends JFrame {
         return (String) cmbOrderType.getSelectedItem();
     }
 
-    public JComboBox getOrderTypeCtrl() {
+    public OrderTypeComboBox getOrderTypeCtrl() {
         return cmbOrderType;
     }
 
@@ -245,268 +240,46 @@ public class OrderManager extends JFrame {
         validate();
     }
 
-    public JButton getGetTotalButton() {
+    public GetTotalButton getGetTotalButton() {
         return getTotalButton;
     }
 
-    public JButton getCreateOrderButton() {
+    public CreateOrderButton getCreateOrderButton() {
         return createOrderButton;
     }
 
-    public JButton getModOrderButton() {
+    public ModifyOrderButton getModOrderButton() {
         return modOrderButton;
     }
 
-    public JButton getRemoveButton() {
+    public RemoveOrderButton getRemoveButton() {
         return removeButton;
     }
 
-    public JButton getSaveOrderButton() {
+    public SaveOrderButton getSaveOrderButton() {
         return saveOrderButton;
+    }
+
+    public void configureButtons(UIBuilder builder) {
+        createOrderButton.setBuilder(builder);
+        modOrderButton.setBuilder(builder);
+        saveOrderButton.setBuilder(builder);
+        cmbOrderType.setBuilder(builder);
+    }
+
+    public void setSaveOrderNum(int numOrden) {
+        saveOrderButton.setNumOrden(numOrden);
+    }
+
+    public void setModifyOrderNum(int numOrden) {
+        modOrderButton.setNumOrden(numOrden);
     }
 
 }// End of class OrderManager
 
 class ButtonHandler implements ActionListener {
-
-    OrderManager objOrderManager;
-    UIBuilder builder;
-    JPanel UIObj;
-    OrderComposite objOrderComp = new OrderComposite();
-    int numOrden = 0;
-
     public void actionPerformed(ActionEvent e) {
-        String totalParcialResult = null;
-
-        if (e.getActionCommand().equals(OrderManager.EXIT)) {
-            System.exit(1);
-        }
-        // ****************************************************
-        if (e.getSource() == objOrderManager.getOrderTypeCtrl()) {
-            String selection = objOrderManager.getOrderType();
-            if (selection.equals(OrderManager.NULL) == false) {
-                setPanelTypeOrder(selection);
-                objOrderManager.getGetTotalButton().setEnabled(true);
-                objOrderManager.getCreateOrderButton().setEnabled(true);
-                objOrderManager.getModOrderButton().setEnabled(true);
-                objOrderManager.getRemoveButton().setEnabled(true);
-            } else {
-                objOrderManager.getGetTotalButton().setEnabled(false);
-                objOrderManager.getCreateOrderButton().setEnabled(false);
-                objOrderManager.getModOrderButton().setEnabled(false);
-                objOrderManager.getRemoveButton().setEnabled(false);
-                objOrderManager.displayNewUI(new JPanel());
-            }
-
-        }
-        // ****************************************************
-        if (e.getActionCommand().equals(OrderManager.CREATE_ORDER)) {
-
-            String orderType = objOrderManager.getOrderType();
-
-            // get input values
-            HashMap values = builder.getValues();
-            Order order = createOrder(orderType, values);
-
-            // Get the Visitor (instantiate)
-            OrderVisitor visitor = objOrderManager.getOrderVisitor();
-
-            // accept the visitor instance
-            order.accept(visitor);
-            try {
-                objOrderComp.addComponent((OrderComponent) order);
-            } catch (Exception ex) {
-                System.out.println("Error AddComponent" + ex);
-            }
-
-            totalParcialResult = String.valueOf(visitor.getOrderTotal());
-            objOrderManager.setParcialValue(totalParcialResult);
-
-        }
-
-        if (e.getActionCommand().equals(OrderManager.REMOVE_ORDER)) {
-            String op = JOptionPane.showInputDialog(objOrderManager, "Ingrese el ID de orden");
-
-            if (op == null) {
-            } else {
-                numOrden = Integer.parseInt(op);
-                Order orderToEdit = null;
-
-                Iterator iterator = objOrderComp.getItOrders();
-
-                for (int i = 0; i < numOrden; i++) {
-                    if (iterator.hasNext()) {
-
-                        orderToEdit = (Order) iterator.next();
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No existe el elemento", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        orderToEdit = null;
-                    }
-                }
-
-                if (orderToEdit != null) {
-                    try {
-                        objOrderComp.removeComponent(numOrden - 1);
-                    } catch (Exception ex) {
-                        System.out.println("Error");
-                    }
-                }
-            }
-        }
-
-        // ****************************************************
-        if (e.getActionCommand().equals(OrderManager.MODIFY_ORDER)) {
-
-            String op = JOptionPane.showInputDialog(objOrderManager, "Ingrese el ID de orden");
-
-            if (op == null) {
-            } else {
-                numOrden = Integer.parseInt(op);
-                Order orderToEdit = null;
-
-                Iterator iterator = objOrderComp.getItOrders();
-
-                for (int i = 0; i < numOrden; i++) {
-                    if (iterator.hasNext()) {
-
-                        orderToEdit = (Order) iterator.next();
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No existe el elemento", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        orderToEdit = null;
-                    }
-                }
-
-                if (orderToEdit != null) {
-                    HashMap<String, String> values = new HashMap<>();
-                    if (orderToEdit.getClass().equals(CaliforniaOrder.class)) {
-                        setPanelTypeOrder(objOrderManager.CA_ORDER);
-                        objOrderManager.getOrderTypeCtrl().setSelectedItem(objOrderManager.CA_ORDER);
-
-                        CaliforniaOrder o = (CaliforniaOrder) orderToEdit;
-
-                        values.put("orderAmount", String.valueOf(o.getOrderAmount()));
-                        values.put("additionalTax", String.valueOf(o.getAdditionalTax()));
-
-                    }
-                    if (orderToEdit.getClass().equals(NonCaliforniaOrder.class)) {
-                        setPanelTypeOrder(objOrderManager.NON_CA_ORDER);
-                        objOrderManager.getOrderTypeCtrl().setSelectedItem(objOrderManager.NON_CA_ORDER);
-
-                        NonCaliforniaOrder o = (NonCaliforniaOrder) orderToEdit;
-
-                        values.put("orderAmount", String.valueOf(o.getOrderAmount()));
-
-                    }
-                    if (orderToEdit.getClass().equals(OverseasOrder.class)) {
-                        objOrderManager.getOrderTypeCtrl().setSelectedItem(objOrderManager.OVERSEAS_ORDER);
-                        setPanelTypeOrder(objOrderManager.OVERSEAS_ORDER);
-
-                        OverseasOrder o = (OverseasOrder) orderToEdit;
-
-                        values.put("orderAmount", String.valueOf(o.getOrderAmount()));
-                        values.put("additionalSH", String.valueOf(o.getAdditionalSH()));
-                    }
-                    if (orderToEdit.getClass().equals(BrazilianOrder.class)) {
-                        objOrderManager.getOrderTypeCtrl().setSelectedItem(objOrderManager.BZ_ORDER);
-                        setPanelTypeOrder(objOrderManager.BZ_ORDER);
-
-                        BrazilianOrder o = (BrazilianOrder) orderToEdit;
-
-                        values.put("orderAmount", String.valueOf(o.getOrderAmount()));
-                        values.put("additionalSH", String.valueOf(o.getAdditionalSH()));
-                    }
-                    builder.setValues(values);
-
-                    objOrderManager.getGetTotalButton().setEnabled(false);
-                    objOrderManager.getCreateOrderButton().setEnabled(false);
-                    objOrderManager.getModOrderButton().setEnabled(false);
-                    objOrderManager.getSaveOrderButton().setEnabled(true);
-                    objOrderManager.getRemoveButton().setEnabled(false);
-                    objOrderManager.getOrderTypeCtrl().setEnabled(false);
-                }
-
-            }
-        }
-
-        // ****************************************************
-        if (e.getActionCommand().equals(OrderManager.SAVE_ORDER)) {
-
-            String orderType = objOrderManager.getOrderType();
-            HashMap newValues = builder.getValues();
-            Order order = createOrder(orderType, newValues);
-
-            OrderVisitor visitor = objOrderManager.getOrderVisitor();
-            order.accept(visitor);
-
-            try {
-                objOrderComp.setComponent(numOrden - 1, (OrderComponent) order);
-            } catch (Exception ex) {
-                System.out.println("Error");
-            }
-
-            totalParcialResult = String.valueOf(visitor.getOrderTotal());
-
-            objOrderManager.setParcialValue(totalParcialResult);
-            objOrderManager.getGetTotalButton().setEnabled(true);
-            objOrderManager.getCreateOrderButton().setEnabled(true);
-            objOrderManager.getModOrderButton().setEnabled(true);
-            objOrderManager.getSaveOrderButton().setEnabled(false);
-            objOrderManager.getRemoveButton().setEnabled(true);
-            objOrderManager.getOrderTypeCtrl().setEnabled(true);
-        }
-
-        // ****************************************************
-        if (e.getActionCommand().equals(OrderManager.GET_TOTAL)) {
-            String total = String.valueOf(objOrderComp.getTotal());
-            objOrderManager.setTotalValue(total);
-            JOptionPane.showMessageDialog(null, objOrderComp.getInfo(), "Información", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    private void setPanelTypeOrder(String selection) {
-        BuilderFactory factory = new BuilderFactory();
-
-        builder = factory.getUIBuilder(selection);
-
-        UIDirector director = new UIDirector(builder);
-
-        director.build();
-
-        UIObj = builder.getSearchUI();
-        objOrderManager.displayNewUI(UIObj);
-    }
-
-    public Order createOrder(String orderType, HashMap<String, String> values) {
-        if (orderType.equalsIgnoreCase(OrderManager.CA_ORDER)) {
-            Double orderAmount = Double.parseDouble(values.get("orderAmount"));
-            Double Tax = Double.parseDouble(values.get("additionalTax"));
-            return new CaliforniaOrder(orderAmount, Tax);
-        }
-        if (orderType.equalsIgnoreCase(OrderManager.NON_CA_ORDER)) {
-            Double orderAmount = Double.parseDouble(values.get("orderAmount"));
-            return new NonCaliforniaOrder(orderAmount);
-        }
-        if (orderType.equalsIgnoreCase(OrderManager.OVERSEAS_ORDER)) {
-            Double orderAmount = Double.parseDouble(values.get("orderAmount"));
-            Double SH = Double.parseDouble(values.get("additionalSH"));
-            return new OverseasOrder(orderAmount, SH);
-        }
-        if (orderType.equalsIgnoreCase(OrderManager.BZ_ORDER)) {
-            Double orderAmount = Double.parseDouble(values.get("orderAmount"));
-            Double SH = Double.parseDouble(values.get("additionalSH"));
-            return new BrazilianOrder(orderAmount, SH);
-        }
-        return null;
-    }
-
-    public ButtonHandler() {
-    }
-
-    public ButtonHandler(OrderManager inObjOrderManager) {
-        objOrderManager = inObjOrderManager;
+        Command commandObj = (Command) e.getSource();
+        commandObj.processEvent();
     }
 }

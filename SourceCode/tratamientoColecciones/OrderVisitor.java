@@ -4,7 +4,7 @@ package tratamientoColecciones;
  *
  * @author Fabio - Diego
  */
-class OrderVisitor implements VisitorInterface {
+public class OrderVisitor implements VisitorInterface {
 
     private double orderTotal;
 
