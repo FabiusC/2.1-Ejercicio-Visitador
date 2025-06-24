@@ -12,5 +12,5 @@ public interface VisitorInterface {
 
     public void visit(OverseasOrder oo);
 
-    public void visit(BrazilianOrder bzo);
+    public void visit(CanadianOrder bzo);
 }

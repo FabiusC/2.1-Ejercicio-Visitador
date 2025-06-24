@@ -1,18 +1,19 @@
 package comportamental;
 
-import javax.swing.JButton;
+import javax.swing.*;
+
 import tratamientoColecciones.OrderManager;
 import tratamientoColecciones.OrderComposite;
 import tratamientoColecciones.Order;
 import tratamientoColecciones.CaliforniaOrder;
 import tratamientoColecciones.NonCaliforniaOrder;
 import tratamientoColecciones.OverseasOrder;
-import tratamientoColecciones.BrazilianOrder;
+import tratamientoColecciones.CanadianOrder;
 import creacional.UIBuilder;
 import creacional.BuilderFactory;
 import creacional.UIDirector;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -39,6 +40,22 @@ public class ModifyOrderButton extends JButton implements Command {
 
     @Override
     public void processEvent() {
+
+        JLabel label = new JLabel("<html><pre>" +
+                orderComposite.getInfo().replace("\n", "<br/>") +
+                "</pre></html>");
+
+        JScrollPane scrollPane = new JScrollPane(label);
+        scrollPane.setPreferredSize(new Dimension(400, 200));
+
+        JOptionPane.showMessageDialog(
+                null,
+                scrollPane,
+                "Información",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+
         String op = JOptionPane.showInputDialog(orderManager, "Ingrese el ID de orden");
         if (op == null) {
             return;
@@ -76,12 +93,12 @@ public class ModifyOrderButton extends JButton implements Command {
                 values.put("orderAmount", String.valueOf(o.getOrderAmount()));
                 values.put("additionalSH", String.valueOf(o.getAdditionalSH()));
             }
-            if (orderToEdit.getClass().equals(BrazilianOrder.class)) {
-                orderManager.getOrderTypeCtrl().setSelectedItem(orderManager.BZ_ORDER);
-                setPanelTypeOrder(orderManager.BZ_ORDER);
-                BrazilianOrder o = (BrazilianOrder) orderToEdit;
+            if (orderToEdit.getClass().equals(CanadianOrder.class)) {
+                orderManager.getOrderTypeCtrl().setSelectedItem(orderManager.CANADA_ORDER);
+                setPanelTypeOrder(orderManager.CANADA_ORDER);
+                CanadianOrder o = (CanadianOrder) orderToEdit;
                 values.put("orderAmount", String.valueOf(o.getOrderAmount()));
-                values.put("additionalSH", String.valueOf(o.getAdditionalSH()));
+                //values.put("additionalSH", String.valueOf(o.getAdditionalSH()));
             }
             builder.setValues(values);
             orderManager.getGetTotalButton().setEnabled(false);

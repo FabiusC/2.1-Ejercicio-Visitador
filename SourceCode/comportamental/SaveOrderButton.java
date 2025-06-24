@@ -8,7 +8,7 @@ import tratamientoColecciones.OrderComponent;
 import tratamientoColecciones.CaliforniaOrder;
 import tratamientoColecciones.NonCaliforniaOrder;
 import tratamientoColecciones.OverseasOrder;
-import tratamientoColecciones.BrazilianOrder;
+import tratamientoColecciones.CanadianOrder;
 import creacional.UIBuilder;
 import javax.swing.JOptionPane;
 import java.util.HashMap;
@@ -114,10 +114,10 @@ public class SaveOrderButton extends JButton implements Command {
             Double SH = Double.parseDouble(values.get("additionalSH"));
             return new OverseasOrder(orderAmount, SH);
         }
-        if (orderType.equalsIgnoreCase(OrderManager.BZ_ORDER)) {
+        if (orderType.equalsIgnoreCase(OrderManager.CANADA_ORDER)) {
             Double orderAmount = Double.parseDouble(values.get("orderAmount"));
             Double SH = Double.parseDouble(values.get("additionalSH"));
-            return new BrazilianOrder(orderAmount, SH);
+            return new CanadianOrder(orderAmount);
         }
         return null;
     }

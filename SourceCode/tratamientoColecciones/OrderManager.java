@@ -1,20 +1,11 @@
 package tratamientoColecciones;
 
-import creacional.NONCABuilder;
 import creacional.UIBuilder;
-import creacional.OverseasBuilder;
-import creacional.BZBuilder;
-import creacional.BuilderFactory;
-import creacional.CABuilder;
-import creacional.UIDirector;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Iterator;
 
 import javax.swing.*;
-
-import java.util.HashMap;
 
 import comportamental.GetTotalButton;
 import comportamental.CreateOrderButton;
@@ -35,7 +26,7 @@ public class OrderManager extends JFrame {
     public static final String CA_ORDER = "California Order";
     public static final String NON_CA_ORDER = "Non-California Order";
     public static final String OVERSEAS_ORDER = "Overseas Order";
-    public static final String BZ_ORDER = "Brazilian Order";
+    public static final String CANADA_ORDER = "Canadian Order";
 
     public static final String GET_TOTAL = "Get Total";
     public static final String CREATE_ORDER = "Create Order";
@@ -45,7 +36,7 @@ public class OrderManager extends JFrame {
     public static final String EXIT = "Exit";
 
     private OrderTypeComboBox cmbOrderType;
-    private JPanel pSearchCriteria;
+    private JPanel pForm;
 
     private GetTotalButton getTotalButton;
     private CreateOrderButton createOrderButton;
@@ -55,27 +46,32 @@ public class OrderManager extends JFrame {
     private RemoveOrderButton removeButton;
 
     private JLabel lblOrderType;
-    private JLabel lblParcial, lblParcialValue;
+    private JLabel lblSubtotal, lblSubtotalValue;
     private JLabel lblTotal, lblTotalValue;
 
     private OrderVisitor objVisitor;
     private OrderComposite objOrderComp = new OrderComposite();
 
     public OrderManager() {
-        super("Visitor Pattern Puntual Exercise");
+        super("Order Management system");
 
         objVisitor = new OrderVisitor();
 
         cmbOrderType = new OrderTypeComboBox(this);
+        cmbOrderType.addItem(OrderManager.NULL);
+        cmbOrderType.addItem(OrderManager.CA_ORDER);
+        cmbOrderType.addItem(OrderManager.NON_CA_ORDER);
+        cmbOrderType.addItem(OrderManager.OVERSEAS_ORDER);
+        cmbOrderType.addItem(OrderManager.CANADA_ORDER);
 
-        pSearchCriteria = new JPanel();
+        pForm = new JPanel();
 
         lblOrderType = new JLabel("Order Type:");
 
-        lblParcial = new JLabel("Result Parcial:");
-        lblParcialValue = new JLabel("Click Create Order Button");
+        lblSubtotal = new JLabel("Subtotal:");
+        lblSubtotalValue = new JLabel("Click Create Order Button");
 
-        lblTotal = new JLabel("Result Total:");
+        lblTotal = new JLabel("Total:");
         lblTotalValue = new JLabel("Click GetTotal Button");
 
         getTotalButton = new GetTotalButton(this, objOrderComp);
@@ -117,14 +113,14 @@ public class OrderManager extends JFrame {
         gbc2.gridx = 1;
         gbc2.gridy = 0;
         gridbag2.setConstraints(modOrderButton, gbc2);
-        gbc2.gridx = 0;
-        gbc2.gridy = 1;
+        gbc2.gridx = 1;
+        gbc2.gridy = 3;
         gridbag2.setConstraints(getTotalButton, gbc2);
         gbc2.gridx = 1;
         gbc2.gridy = 1;
         gridbag2.setConstraints(saveOrderButton, gbc2);
-        gbc2.gridx = 0;
-        gbc2.gridy = 2;
+        gbc2.gridx = 5;
+        gbc2.gridy = 5;
         gridbag2.setConstraints(exitButton, gbc2);
 
         // ****************************************************
@@ -134,10 +130,10 @@ public class OrderManager extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         buttonPanel.add(lblOrderType);
         buttonPanel.add(cmbOrderType);
-        buttonPanel.add(pSearchCriteria);
+        buttonPanel.add(pForm);
 
-        buttonPanel.add(lblParcial);
-        buttonPanel.add(lblParcialValue);
+        buttonPanel.add(lblSubtotal);
+        buttonPanel.add(lblSubtotalValue);
         buttonPanel.add(lblTotal);
         buttonPanel.add(lblTotalValue);
 
@@ -159,17 +155,17 @@ public class OrderManager extends JFrame {
         gbc.anchor = GridBagConstraints.EAST;
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gridbag.setConstraints(pSearchCriteria, gbc);
+        gridbag.setConstraints(pForm, gbc);
 
         gbc.anchor = GridBagConstraints.EAST;
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gridbag.setConstraints(lblParcial, gbc);
+        gridbag.setConstraints(lblSubtotal, gbc);
 
         gbc.anchor = GridBagConstraints.WEST;
         gbc.gridx = 1;
         gbc.gridy = 2;
-        gridbag.setConstraints(lblParcialValue, gbc);
+        gridbag.setConstraints(lblSubtotalValue, gbc);
 
         gbc.anchor = GridBagConstraints.EAST;
         gbc.gridx = 0;
@@ -201,14 +197,11 @@ public class OrderManager extends JFrame {
 
     public static void main(String[] args) {
         JFrame frame = new OrderManager();
-
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
-
-        // frame.pack();
         frame.setSize(500, 400);
         frame.setVisible(true);
     }
@@ -218,7 +211,7 @@ public class OrderManager extends JFrame {
     }
 
     public void setParcialValue(String msg) {
-        lblParcialValue.setText(msg);
+        lblSubtotalValue.setText(msg);
     }
 
     public OrderVisitor getOrderVisitor() {
@@ -234,9 +227,9 @@ public class OrderManager extends JFrame {
     }
 
     public void displayNewUI(JPanel panel) {
-        pSearchCriteria.removeAll();
-        pSearchCriteria.add(panel);
-        pSearchCriteria.validate();
+        pForm.removeAll();
+        pForm.add(panel);
+        pForm.validate();
         validate();
     }
 

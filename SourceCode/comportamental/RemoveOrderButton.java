@@ -1,10 +1,12 @@
 package comportamental;
 
-import javax.swing.JButton;
+import javax.swing.*;
+
 import tratamientoColecciones.OrderManager;
 import tratamientoColecciones.OrderComposite;
 import tratamientoColecciones.Order;
-import javax.swing.JOptionPane;
+
+import java.awt.*;
 import java.util.Iterator;
 
 public class RemoveOrderButton extends JButton implements Command {
@@ -20,6 +22,21 @@ public class RemoveOrderButton extends JButton implements Command {
 
     @Override
     public void processEvent() {
+
+        JLabel label = new JLabel("<html><pre>" +
+                orderComposite.getInfo().replace("\n", "<br/>") +
+                "</pre></html>");
+
+        JScrollPane scrollPane = new JScrollPane(label);
+        scrollPane.setPreferredSize(new Dimension(400, 200));
+
+        JOptionPane.showMessageDialog(
+                null,
+                scrollPane,
+                "Información",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
         String op = JOptionPane.showInputDialog(orderManager, "Ingrese el ID de orden");
         if (op == null) {
             return;

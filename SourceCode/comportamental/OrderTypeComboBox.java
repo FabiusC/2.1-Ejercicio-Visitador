@@ -14,11 +14,7 @@ public class OrderTypeComboBox extends JComboBox<String> implements Command {
     public OrderTypeComboBox(OrderManager orderManager) {
         super();
         this.orderManager = orderManager;
-        addItem(OrderManager.NULL);
-        addItem(OrderManager.CA_ORDER);
-        addItem(OrderManager.NON_CA_ORDER);
-        addItem(OrderManager.OVERSEAS_ORDER);
-        addItem(OrderManager.BZ_ORDER);
+
     }
 
     public void setBuilder(UIBuilder builder) {
@@ -27,7 +23,7 @@ public class OrderTypeComboBox extends JComboBox<String> implements Command {
 
     @Override
     public void processEvent() {
-        String selection = orderManager.getOrderType();
+        String selection = (String) this.getSelectedItem();
         if (!selection.equals(OrderManager.NULL)) {
             setPanelTypeOrder(selection);
             orderManager.getGetTotalButton().setEnabled(true);

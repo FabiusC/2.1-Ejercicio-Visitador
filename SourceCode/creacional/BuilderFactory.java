@@ -15,8 +15,8 @@ public class BuilderFactory {
             builder = new NONCABuilder();
         } else if (str.equals(OrderManager.OVERSEAS_ORDER)) {
             builder = new OverseasBuilder();
-        } else if (str.equals(OrderManager.BZ_ORDER)) {
-            builder = new BZBuilder();
+        } else if (str.equals(OrderManager.CANADA_ORDER)) {
+            builder = new CANADABuilder();
         }
         return builder;
     }
