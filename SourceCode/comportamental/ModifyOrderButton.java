@@ -40,7 +40,7 @@ public class ModifyOrderButton extends JButton implements Command {
 
     @Override
     public void processEvent() {
-
+        // INICIO caso de uso mostrar información de todas las ordenes
         JLabel label = new JLabel("<html><pre>" +
                 orderComposite.getInfo().replace("\n", "<br/>") +
                 "</pre></html>");
@@ -55,6 +55,7 @@ public class ModifyOrderButton extends JButton implements Command {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
+        // FIN caso de uso mostrar información de todas las ordenes
 
         String op = JOptionPane.showInputDialog(orderManager, "Ingrese el ID de orden");
         if (op == null) {

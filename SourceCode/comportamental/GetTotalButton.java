@@ -21,6 +21,6 @@ public class GetTotalButton extends JButton implements Command {
     public void processEvent() {
         String total = String.valueOf(orderComposite.getTotal());
         orderManager.setTotalValue(total);
-        JOptionPane.showMessageDialog(null, orderComposite.getInfo(), "Información", JOptionPane.INFORMATION_MESSAGE);
+       // JOptionPane.showMessageDialog(null, orderComposite.getInfo(), "Información", JOptionPane.INFORMATION_MESSAGE);
     }
 }

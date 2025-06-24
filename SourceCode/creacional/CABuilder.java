@@ -64,14 +64,14 @@ public class CABuilder extends UIBuilder {
 
     @Override
     public HashMap<String, String> getValues() {
-        HashMap<String, String> values = new HashMap<String, String>();
-        String strOrderAmount = txtOrderAmount.getText();
-        String strTax = txtAdditionalTax.getText();
+        HashMap<String, String> valuesCA = new HashMap<String, String>();
+        String OrderAmount = txtOrderAmount.getText();
+        String Tax = txtAdditionalTax.getText();
 
-        values.put("orderAmount", strOrderAmount);
-        values.put("additionalTax", strTax);
+        valuesCA.put("orderAmount", OrderAmount);
+        valuesCA.put("additionalTax", Tax);
 
-        return values;
+        return valuesCA;
     }
 
     @Override

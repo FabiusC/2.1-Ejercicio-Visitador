@@ -52,8 +52,8 @@ public class NONCABuilder extends UIBuilder {
     @Override
     public HashMap<String, String> getValues() {
         HashMap<String, String> values = new HashMap<String, String>();
-        String strOrderAmount = txtOrderAmount.getText();
-        values.put("orderAmount", strOrderAmount);
+        String OrderAmount = txtOrderAmount.getText();
+        values.put("orderAmount", OrderAmount);
 
         return values;
     }

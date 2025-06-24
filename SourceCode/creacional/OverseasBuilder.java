@@ -63,14 +63,14 @@ public class OverseasBuilder extends UIBuilder {
 
     @Override
     public HashMap<String, String> getValues() {
-        HashMap<String, String> values = new HashMap<String, String>();
-        String strOrderAmount = txtOrderAmount.getText();
-        String strSH = txtAdditionalSH.getText();
+        HashMap<String, String> OSvalues = new HashMap<String, String>();
+        String orderAmount = txtOrderAmount.getText();
+        String additionalSH = txtAdditionalSH.getText();
 
-        values.put("orderAmount", strOrderAmount);
-        values.put("additionalSH", strSH);
+        OSvalues.put("orderAmount", orderAmount);
+        OSvalues.put("additionalSH", additionalSH);
 
-        return values;
+        return OSvalues;
     }
 
     @Override

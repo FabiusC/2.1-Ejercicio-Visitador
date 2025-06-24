@@ -39,21 +39,12 @@ public class SaveOrderButton extends JButton implements Command {
         try {
             String orderType = orderManager.getOrderType();
             HashMap<String, String> newValues = builder.getValues();
+            orderManager.getCreateOrderButton().setBuilder(builder);
 
-            // Validar que los valores sean números válidos y positivos
-            validateValues(newValues);
 
-            Order order = createOrder(orderType, newValues);
-            if (order == null) {
-                JOptionPane.showMessageDialog(orderManager, "Error al crear la orden", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            order.accept(orderManager.getOrderVisitor());
 
             try {
-                orderComposite.setComponent(numOrden - 1, (OrderComponent) order);
+                orderComposite.setComponent(numOrden - 1, (OrderComponent)  orderManager.getCreateOrderButton().getOrder(newValues, orderType));
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(orderManager, "Error al guardar la orden: " + ex.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -65,7 +56,7 @@ public class SaveOrderButton extends JButton implements Command {
             orderManager.getGetTotalButton().setEnabled(true);
             orderManager.getCreateOrderButton().setEnabled(true);
             orderManager.getModOrderButton().setEnabled(true);
-            orderManager.getSaveOrderButton().setEnabled(false);
+            this.setEnabled(false);
             orderManager.getRemoveButton().setEnabled(true);
             orderManager.getOrderTypeCtrl().setEnabled(true);
 

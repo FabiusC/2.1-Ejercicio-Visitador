@@ -10,10 +10,10 @@ import java.util.Vector;
  */
 public class OrderComposite extends OrderComponent {
 
-    Vector orderCol = new Vector();
+    Vector orderCol;
 
     public OrderComposite() {
-
+orderCol= new Vector();
     }
 
     public void addComponent(OrderComponent component) throws Exception {
@@ -34,15 +34,15 @@ public class OrderComposite extends OrderComponent {
 
     @Override
     public double getTotal() {
-        double totalOrders = 0;
+        double total = 0;
         Enumeration e = orderCol.elements();
         int i = 1;
         while (e.hasMoreElements()) {
             OrderComponent component = (OrderComponent) e.nextElement();
-            totalOrders = totalOrders + (component.getTotal());
+            total = total + (component.getTotal());
             i++;
         }
-        return totalOrders;
+        return total;
     }
 
     public String getInfo() {

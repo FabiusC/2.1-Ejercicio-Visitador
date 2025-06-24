@@ -52,14 +52,14 @@ public class CANADABuilder extends UIBuilder {
 
     @Override
     public HashMap<String, String> getValues() {
-        HashMap<String, String> values = new HashMap<String, String>();
-        String strOrderAmount = txtOrderAmount.getText();
+        HashMap<String, String> CANvalues = new HashMap<String, String>();
+        String orderAmount = txtOrderAmount.getText();
 
 
-        values.put("orderAmount", strOrderAmount);
+        CANvalues.put("orderAmount", orderAmount);
 
 
-        return values;
+        return CANvalues;
     }
 
     @Override

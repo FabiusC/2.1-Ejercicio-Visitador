@@ -44,18 +44,20 @@ public class CreateOrderButton extends JButton implements Command {
             if (order == null) {
                 JOptionPane.showMessageDialog(orderManager, "Error al crear la orden", "Error",
                         JOptionPane.ERROR_MESSAGE);
-                return;
+
             }
 
             OrderVisitor visitor = orderManager.getOrderVisitor();
             order.accept(visitor);
+            String totalParcialResult = String.valueOf(visitor.getOrderTotal());
+            orderManager.setParcialValue(totalParcialResult);
+
             try {
                 orderComposite.addComponent((OrderComponent) order);
             } catch (Exception ex) {
                 System.out.println("Error AddComponent" + ex);
             }
-            String totalParcialResult = String.valueOf(visitor.getOrderTotal());
-            orderManager.setParcialValue(totalParcialResult);
+
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(orderManager, "Error: Los valores deben ser números válidos",
@@ -108,4 +110,22 @@ public class CreateOrderButton extends JButton implements Command {
         }
         return null;
     }
+    public Order getOrder(HashMap<String, String> values,String orderType) {
+        // Validar que los valores sean números válidos y positivos
+        validateValues(values);
+
+        Order order = createOrder(orderType, values);
+        if (order == null) {
+            JOptionPane.showMessageDialog(orderManager, "Error al crear la orden", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        OrderVisitor visitor = orderManager.getOrderVisitor();
+        order.accept(visitor);
+        //String totalParcialResult = String.valueOf(visitor.getOrderTotal());
+        //orderManager.setParcialValue(totalParcialResult);
+        return order;
+    }
+
 }
