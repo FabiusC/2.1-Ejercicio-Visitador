@@ -44,7 +44,6 @@ public class OrderManager extends JFrame {
     private SaveOrderButton saveOrderButton;
     private ExitButton exitButton;
     private RemoveOrderButton removeButton;
-
     private JLabel lblOrderType;
     private JLabel lblSubtotal, lblSubtotalValue;
     private JLabel lblTotal, lblTotalValue;

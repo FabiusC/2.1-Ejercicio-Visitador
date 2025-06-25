@@ -34,8 +34,7 @@ public class RemoveOrderButton extends JButton implements Command {
                 null,
                 scrollPane,
                 "Información",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+                JOptionPane.INFORMATION_MESSAGE);
 
         String op = JOptionPane.showInputDialog(orderManager, "Ingrese el ID de orden");
         if (op == null) {
